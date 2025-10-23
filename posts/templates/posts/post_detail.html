@@ -6,8 +6,22 @@
 <article class="full-post bg-white p-10 shadow-2xl rounded-2xl">
     <h1 class="text-5xl font-extrabold text-slate-900 mb-4 leading-tight">{{ post.title }}</h1>
 
+    {% if user.is_authenticated and user == post.author %}
+    <div class="mb-4 flex space-x-3">
+        <a href="{% url 'post_update' slug=post.slug %}"
+            class="px-4 py-2 text-sm font-medium rounded-lg text-white bg-blue-500 hover:bg-blue-600 transition duration-150">
+            Editar Post
+        </a>
+        <a href="{% url 'post_delete' slug=post.slug %}"
+            class="px-4 py-2 text-sm font-medium rounded-lg text-white bg-red-500 hover:bg-red-600 transition duration-150">
+            Excluir Post
+        </a>
+    </div>
+    {% endif %}
+
     <p class="meta text-lg text-slate-500 mb-10 border-b pb-4">
-        Publicado por <span class="font-bold text-primary">{{ post.author.username }}</span> em {{ post.created_at|date:"d M, Y" }}
+        Publicado por <span class="font-bold text-primary">{{ post.author.username }}</span> em {{
+        post.created_at|date:"d M, Y" }}
     </p>
 
     <div class="post-content prose prose-slate max-w-none prose-lg mb-12">
@@ -46,7 +60,8 @@
         <div class="bg-yellow-50 p-4 rounded-md border border-yellow-400 text-yellow-700 mb-8">
             <p>Você precisa <a href="{% url 'login' %}" class="font-bold underline hover:text-yellow-900">entrar</a> ou
                 <a href="{% url 'signup' %}" class="font-bold underline hover:text-yellow-900">se registrar</a> para
-                comentar.</p>
+                comentar.
+            </p>
         </div>
         {% endif %}
 

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if object %}Editar Post: {{ object.title }}{% else %}Novo Post{% endif %}
+{% endblock title %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-2xl border border-slate-200">
+
+    <h2 class="text-3xl font-bold text-slate-800 mb-8 border-b-2 border-primary pb-2">
+        {% if object %}Editar Artigo{% else %}Novo Artigo{% endif %}
+    </h2>
+
+    <form method="post" class="space-y-6">
+        {% csrf_token %}
+
+        {% for field in form %}
+        <div class="mb-4">
+            <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-slate-700 mb-1">
+                {{ field.label }}
+            </label>
+
+            {{ field }}
+
+            {% for error in field.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ error }}</p>
+            {% endfor %}
+
+            {% if field.help_text %}
+                <p class="mt-1 text-xs text-slate-500">{{ field.help_text|safe }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+        
+        <button type="submit" class="w-full py-3 px-4 rounded-lg shadow-md text-base font-semibold text-white bg-primary hover:bg-cyan-700 transition duration-150">
+            {% if object %}Salvar Alterações{% else %}Publicar Artigo{% endif %}
+        </button>
+
+    </form>
+
+</div>
+{% endblock content %}

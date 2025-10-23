@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Meu Blog em Django{% endblock title %}</title>
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
@@ -28,32 +28,40 @@
                 }
             }
         }
-    </script> 
+    </script>
 </head>
 
 <body class="bg-slate-50 text-secondary font-sans min-h-screen flex flex-col">
     <header class="bg-white shadow-lg sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex justify-between items-center">
-            
+
             <h1 class="text-3xl font-bold text-primary hover:text-cyan-700 transition duration-300">
                 <a href="{% url 'post_list' %}">DevBlog</a>
             </h1>
-            
+
             <nav class="space-x-6 text-base font-medium flex items-center">
-                <a href="{% url 'post_list' %}" class="text-slate-600 hover:text-primary transition duration-150">Posts</a>
-                
                 {% if user.is_authenticated %}
-                    <span class="text-slate-500 text-sm">Olá, <span class="font-semibold text-primary">{{ user.username }}</span></span>
-                    
-                    <form method="post" action="{% url 'logout' %}" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="text-red-500 hover:text-red-700 transition duration-150 text-sm">
-                            Sair
-                        </button>
-                    </form>
-                
+                <a href="{% url 'post_create' %}"
+                    class="px-3 py-1 text-sm bg-green-500 text-white rounded-md hover:bg-green-600 transition duration-150">Novo
+                    Post</a>
+                {% endif %}
+
+                <a href="{% url 'post_list' %}"
+                    class="text-slate-600 hover:text-primary transition duration-150">Posts</a>
+
+                {% if user.is_authenticated %}
+                <span class="text-slate-500 text-sm">Olá, <span class="font-semibold text-primary">{{ user.username}}</span></span>
+
+                <form method="post" action="{% url 'logout' %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="text-red-500 hover:text-red-700 transition duration-150 text-sm">
+                        Sair
+                    </button>
+                </form>
+
                 {% else %}
-                    <a href="{% url 'login' %}" class="px-4 py-2 bg-primary text-white rounded-lg shadow hover:bg-cyan-700 transition duration-150">Entrar</a>
+                <a href="{% url 'login' %}"
+                    class="px-4 py-2 bg-primary text-white rounded-lg shadow hover:bg-cyan-700 transition duration-150">Entrar</a>
                 {% endif %}
             </nav>
         </div>
@@ -61,7 +69,7 @@
 
     <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
         {% block content %}
-            {% endblock content %}
+        {% endblock content %}
     </main>
 
     <footer class="bg-slate-800 mt-auto py-6">

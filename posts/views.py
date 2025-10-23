@@ -1,10 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.forms import UserCreationForm
-from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView
-from django.contrib.auth.mixins import LoginRequiredMixin # <-- NOVO
+from django.urls import reverse_lazy, reverse
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Post, Comment
-from .forms import CommentForm
+from .forms import CommentForm, PostForm
 
 # Create your views here.
 class PostListView(ListView):
@@ -92,3 +92,47 @@ class PostDetailView(DetailView):
 #    def get_absolute_url(self):
 #        from django.urls import reverse
 #        return reverse('post_detail', args=[str(self.slug)])
+
+
+# ----------------------------------------------------
+# VIEWS DE GERENCIAMENTO DE POSTS
+# ----------------------------------------------------
+class PostCreateView(LoginRequiredMixin, CreateView):
+    model = Post
+    template_name = 'posts/post_form.html' # Usaremos um template genérico
+    form_class = PostForm # Usaremos um formulário genérico
+
+    # Define o sucesso do redirecionamento para o post recém-nascido
+    def get_success_url(self):
+        # Usamos reverse para direcionar para o detalhe do post recém-criado (self.object)
+        return reverse('post_detail', args=[self.object.slug])
+
+    # Garante que o autor do post seja o usuário logado
+    def form_valid(self, form):
+        form.instance.author = self.request.user # Garante que o autor seja o usuário logado
+        form.instance.slug = form.instance.title.lower().replace(' ', '-') # Cria um slug simples (melhoria futura: auto-slug)
+        return super().form_valid(form)
+
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Post
+    template_name = 'posts/post_form.html'
+    form_class = PostForm
+
+    # Sobreescrever o método para redirecionar para o post após a edição
+    def get_success_url(self):
+        return reverse('post_detail', args=[self.object.slug])
+
+    # Teste de Permissão: Garante que apenas o autor possa editar o post
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author # Retorna True se o usuário logado
+
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Post
+    template_name = 'posts/post_confirm_delete.html' # Template para confirmação de exclusão
+    success_url = reverse_lazy('post_list') # Redireciona para a lista de posts após a exclusão
+    
+    # Teste de Permissão: Garante que apenas o autor possa deletar
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author

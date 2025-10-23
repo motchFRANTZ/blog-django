@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirmar Exclusão{% endblock title %}
+
+{% block content %}
+    <div class="max-w-xl mx-auto bg-white p-8 rounded-xl shadow-2xl border border-red-500/30">
+        <h2 class="text-3xl font-bold text-red-600 mb-6">Confirmação de Exclusão</h2>
+
+        <p class="text-slate-700 mb-6">Você tem certeza que deseja excluir o post: **"{{ post.title }}"**?</p>
+        <p class="text-sm text-red-500 mb-8">Esta ação é irreversível.</p>
+
+        <form method="post" class="flex justify-between space-x-4">
+            {% csrf_token %}
+            
+            <a href="{% url 'post_detail' slug=post.slug %}" class="flex-1 text-center py-3 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 transition duration-150">
+                Cancelar
+            </a>
+            
+            <button type="submit" class="flex-1 py-3 px-4 rounded-lg shadow-md text-base font-semibold text-white bg-red-600 hover:bg-red-700 transition duration-150">
+                Confirmar Exclusão
+            </button>
+        </form>
+    </div>
+{% endblock content %}
