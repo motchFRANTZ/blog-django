@@ -3,32 +3,43 @@
 {% block title %}Todos os Posts{% endblock title %}
 
 {% block content %}
-    <h2>Posts Recentes</h2>
+    <h2 class="text-4xl font-bold text-slate-800 mb-10 border-b-4 border-primary pb-3">Artigos Recentes</h2>
 
-    {% for post in posts %}
-        <article class="post-summary">
-            <h3>{{ post.title }}</h3>
-            <p class="meta">Publicado por {{ post.author }} em {{ post.created_at|date:"d M, Y" }}</p>
-            <p>{{ post.content|truncatechars:150 }}</p> 
-            <a href="{% url 'post_detail' slug=post.slug %}">Ler Mais...</a> </article>
-        <hr>
-    {% empty %}
-        <p>Ainda não há posts publicados.</p>
-    {% endfor %}
+    <div class="space-y-12">
+        {% for post in posts %}
+            <article class="post-summary p-8 bg-white shadow-xl rounded-2xl border border-slate-200 hover:shadow-2xl transition duration-500 transform hover:-translate-y-1">
+                <h3 class="text-3xl font-bold mb-3">
+                    <a href="{% url 'post_detail' slug=post.slug %}" class="text-slate-800 hover:text-primary transition duration-300">{{ post.title }}</a>
+                </h3>
+                
+                <p class="meta text-sm text-slate-500 mb-6">
+                    Publicado por <span class="font-semibold text-primary">{{ post.author }}</span> em {{ post.created_at|date:"d M, Y" }}
+                </p>
+                
+                <p class="text-secondary mb-6 leading-relaxed">{{ post.content|truncatechars:250 }}</p> 
+                
+                <a href="{% url 'post_detail' slug=post.slug %}" class="inline-flex items-center text-primary hover:text-cyan-700 font-semibold transition duration-150">
+                    Continuar Lendo
+                    <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </a>
+            </article>
+        {% empty %}
+            {% endfor %}
+    </div>
 
     {% if is_paginated %}
-        <div class="pagination">
-            <span class="step-links">
+        <div class="pagination mt-12 pt-6 border-t border-slate-200 flex justify-center">
+            <span class="step-links inline-flex rounded-md shadow-sm">
                 {% if page_obj.has_previous %}
-                    <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                    <a href="?page={{ page_obj.previous_page_number }}" class="relative inline-flex items-center px-4 py-2 border border-slate-300 text-sm font-medium rounded-l-lg text-slate-700 bg-white hover:bg-slate-100">← Anterior</a>
                 {% endif %}
 
-                <span class="current">
+                <span class="current relative inline-flex items-center px-4 py-2 border border-slate-300 bg-primary text-sm font-medium text-white">
                     Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
                 </span>
 
                 {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}">Próxima</a>
+                    <a href="?page={{ page_obj.next_page_number }}" class="relative inline-flex items-center px-4 py-2 border border-slate-300 text-sm font-medium rounded-r-lg text-slate-700 bg-white hover:bg-slate-100">Próxima →</a>
                 {% endif %}
             </span>
         </div>

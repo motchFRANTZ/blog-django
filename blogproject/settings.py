@@ -121,3 +121,10 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# O usuário será redirecionado para esta URL após o login
+LOGIN_REDIRECT_URL = 'post_list' # <-- Usando o NOME da URL (melhor que o path '/blog/')
+
+# O usuário será redirecionado para esta URL após o logout
+LOGOUT_REDIRECT_URL = 'login' #

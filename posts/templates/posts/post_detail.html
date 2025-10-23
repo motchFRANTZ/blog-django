@@ -3,25 +3,32 @@
 {% block title %}{{ post.title }}{% endblock title %}
 
 {% block content %}
-    <article class="full-post">
-        <h1>{{ post.title }}</h1>
-        <p class="meta">
-            Publicado por **{{ post.author }}** em {{ post.created_at|date:"d M, Y" }}
+    <article class="full-post bg-white p-10 shadow-2xl rounded-2xl">
+        <h1 class="text-5xl font-extrabold text-slate-900 mb-4 leading-tight">{{ post.title }}</h1>
+        
+        <p class="meta text-lg text-slate-500 mb-10 border-b pb-4">
+            Publicado por <span class="font-bold text-primary">{{ post.author }}</span> em {{ post.created_at|date:"d M, Y" }}
         </p>
 
-        <div class="post-content">
+        <div class="post-content prose prose-slate max-w-none prose-lg mb-12">
             {{ post.content|safe }} 
         </div>
         
-        <hr>
+        <hr class="my-10">
 
-        <section class="comments-section">
-            <h3>Comentários (Ainda não implementado)</h3>
-            <p>Em breve, a funcionalidade de comentários estará aqui!</p>
+        <section class="comments-section mt-10">
+            <h3 class="text-3xl font-bold mb-6 text-slate-800">Comentários (0)</h3>
+            <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
+                 <p class="text-secondary">Esta área será ativada na próxima funcionalidade: Comentários e Formulários.</p>
+            </div>
         </section>
         
     </article>
     
-    <p><a href="{% url 'post_list' %}">← Voltar para a lista de posts</a></p>
+    <p class="mt-10 text-center">
+        <a href="{% url 'post_list' %}" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-semibold rounded-lg shadow-md text-white bg-secondary hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition duration-150">
+            ← Voltar para a lista de artigos
+        </a>
+    </p>
     
 {% endblock content %}

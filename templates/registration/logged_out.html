@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}Desconectado{% endblock title %}
+
+{% block content %}
+    <h2>Você saiu da sua conta com sucesso.</h2>
+    <p>Obrigado por utilizar o sistema.</p>
+    <p><a href="{% url 'login' %}">Faça login novamente</a></p>
+    <p><a href="{% url 'post_list' %}">Voltar para o blog</a></p>
+{% endblock content %}
