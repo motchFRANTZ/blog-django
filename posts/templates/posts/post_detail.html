@@ -1,34 +1,76 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 
 {% block title %}{{ post.title }}{% endblock title %}
 
 {% block content %}
-    <article class="full-post bg-white p-10 shadow-2xl rounded-2xl">
-        <h1 class="text-5xl font-extrabold text-slate-900 mb-4 leading-tight">{{ post.title }}</h1>
-        
-        <p class="meta text-lg text-slate-500 mb-10 border-b pb-4">
-            Publicado por <span class="font-bold text-primary">{{ post.author }}</span> em {{ post.created_at|date:"d M, Y" }}
-        </p>
+<article class="full-post bg-white p-10 shadow-2xl rounded-2xl">
+    <h1 class="text-5xl font-extrabold text-slate-900 mb-4 leading-tight">{{ post.title }}</h1>
 
-        <div class="post-content prose prose-slate max-w-none prose-lg mb-12">
-            {{ post.content|safe }} 
-        </div>
-        
-        <hr class="my-10">
-
-        <section class="comments-section mt-10">
-            <h3 class="text-3xl font-bold mb-6 text-slate-800">Comentários (0)</h3>
-            <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
-                 <p class="text-secondary">Esta área será ativada na próxima funcionalidade: Comentários e Formulários.</p>
-            </div>
-        </section>
-        
-    </article>
-    
-    <p class="mt-10 text-center">
-        <a href="{% url 'post_list' %}" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-semibold rounded-lg shadow-md text-white bg-secondary hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition duration-150">
-            ← Voltar para a lista de artigos
-        </a>
+    <p class="meta text-lg text-slate-500 mb-10 border-b pb-4">
+        Publicado por <span class="font-bold text-primary">{{ post.author.username }}</span> em {{ post.created_at|date:"d M, Y" }}
     </p>
-    
+
+    <div class="post-content prose prose-slate max-w-none prose-lg mb-12">
+        {{ post.content|safe }}
+    </div>
+
+    <hr class="my-10">
+
+    <section class="comments-section mt-10">
+        <h3 class="text-3xl font-bold mb-6 text-slate-800">
+            Comentários ({{ comments|length }})
+        </h3>
+
+        {% if user.is_authenticated %}
+        <div class="bg-white p-6 rounded-xl shadow-md mb-8 border border-primary/20">
+            <h4 class="text-xl font-semibold mb-4 text-slate-700">Deixe seu comentário:</h4>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="mb-4">
+                    {{ comment_form.content.label_tag }}
+                    {{ comment_form.content }}
+                    {% if comment_form.content.errors %}
+                    <p class="text-sm text-red-600 mt-1">{{ comment_form.content.errors }}</p>
+                    {% endif %}
+                </div>
+
+                <button type="submit"
+                    class="px-5 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-primary hover:bg-cyan-700 transition duration-150">
+                    Enviar Comentário
+                </button>
+            </form>
+        </div>
+        {% else %}
+        <div class="bg-yellow-50 p-4 rounded-md border border-yellow-400 text-yellow-700 mb-8">
+            <p>Você precisa <a href="{% url 'login' %}" class="font-bold underline hover:text-yellow-900">entrar</a> ou
+                <a href="{% url 'signup' %}" class="font-bold underline hover:text-yellow-900">se registrar</a> para
+                comentar.</p>
+        </div>
+        {% endif %}
+
+        <div class="space-y-6">
+            {% for comment in comments %}
+            <div class="comment p-5 bg-slate-100 rounded-lg shadow-inner">
+                <p class="font-semibold text-sm mb-1 text-slate-800">{{ comment.author.username }}</p>
+                <p class="text-xs text-slate-500 mb-3">{{ comment.created_at|date:"d M, Y \à\s H:i" }}</p>
+                <p class="text-slate-700">{{ comment.content }}</p>
+            </div>
+            {% empty %}
+            <p class="text-slate-500">Seja o primeiro a comentar!</p>
+            {% endfor %}
+        </div>
+
+    </section>
+
+</article>
+
+<p class="mt-10 text-center">
+    <a href="{% url 'post_list' %}"
+        class="inline-flex items-center px-6 py-3 border border-transparent text-base font-semibold rounded-lg shadow-md text-white bg-secondary hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition duration-150">
+        ← Voltar para a lista de artigos
+    </a>
+</p>
+
 {% endblock content %}

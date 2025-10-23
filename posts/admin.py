@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post
+from .models import Post, Comment
 
 # Register your models here.
 @admin.register(Post)
@@ -35,3 +35,22 @@ search_fields: Adiciona uma barra de busca que procura termos nos campos especif
 
 prepopulated_fields = {'slug': ('title',)}: Muito importante! Ao digitar o título de um post, o Django preenche o campo slug automaticamente, transformando "Meu Primeiro Post" em "meu-primeiro-post". Isso economiza tempo e evita erros.
 '''
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    # Exibir o post, o autor e o status de aprovação
+    list_display = ('post', 'author', 'created_at', 'approved')
+    # Permitir filtrar por status de aprovação e data
+    list_filter = ('approved', 'created_at')
+    # Permitir aprovar/desaprovar comentários diretamente na lista
+    actions = ['approve_comments', 'disapprove_comments']
+    
+    def approve_comments(self, request, queryset):
+        queryset.update(approved=True)
+        self.message_user(request, "Comentários selecionados foram aprovados com sucesso.")
+    approve_comments.short_description = "Aprovar comentários selecionados"
+
+    def disapprove_comments(self, request, queryset):
+        queryset.update(approved=False)
+        self.message_user(request, "Comentários selecionados foram reprovados com sucesso.")
+    disapprove_comments.short_description = "Reprovar comentários selecionados"

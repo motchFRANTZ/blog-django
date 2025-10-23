@@ -2,6 +2,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils import timezone
+from django.urls import reverse
 
 # Obtém o Model de Usuário que o Django está usando (boa prática de referência)
 User = get_user_model()
@@ -42,4 +43,41 @@ class Post(models.Model):
     # Classe meta para definir ordenação e outros metadados
     class Meta:
         # Posts serão listados do mais novo para o mais antigo (0 '-' inverte a ordem)
-        ordering = ['-created_at']  
+        ordering = ['-created_at']
+    
+    def get_absolute_url(self):
+        from django.urls import reverse
+        # Usa o nome da nossa rota 'post_detail' e passa o slug como argumento
+        return reverse('post_detail', args=[str(self.slug)])
+
+class Comment(models.Model):
+    # Relacionamento 1: O comentário pertece a um post
+    # related_name: Permite acessar todos os comentários de um Post (ex: post.comments.all())
+    post = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        related_name='comments',
+    )
+
+    # Relacionamento 2: O comentário é escrito por um Usuário
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='user_comments',
+    )
+
+    # O Conteúdo do comentário
+    content = models.TextField(verbose_name='Comentário')
+
+    # Data de criação
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    # Indica se o comentário foi aprovado (bom para moderação)
+    approved = models.BooleanField(default=False)
+
+    # Mágico
+    def __str__(self):
+        return f"Comentário de {self.author} em {self.post.title}"
+
+    class Meta:
+        ordering = ['-created_at']
