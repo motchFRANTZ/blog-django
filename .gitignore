@@ -1,0 +1,16 @@
+# Arquivos de Sistema
+.DS_Store
+
+# Ambiente Virtual
+venv/
+*.pyc
+
+# Django
+__pycache__/
+db.sqlite3  # O banco de dados de desenvolvimento
+/media
+
+# Arquivos sensíveis que não devem ir para o repositório
+# Se você for usar chaves secretas, este arquivo é crucial!
+# Se você for usar variáveis de ambiente, adicione o arquivo .env
+# settings_local.py
