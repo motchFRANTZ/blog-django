@@ -1,0 +1,37 @@
+{% extends 'base.html' %} 
+
+{% block title %}Todos os Posts{% endblock title %}
+
+{% block content %}
+    <h2>Posts Recentes</h2>
+
+    {% for post in posts %}
+        <article class="post-summary">
+            <h3>{{ post.title }}</h3>
+            <p class="meta">Publicado por {{ post.author }} em {{ post.created_at|date:"d M, Y" }}</p>
+            <p>{{ post.content|truncatechars:150 }}</p> 
+            <a href="{% url 'post_detail' slug=post.slug %}">Ler Mais...</a> </article>
+        <hr>
+    {% empty %}
+        <p>Ainda não há posts publicados.</p>
+    {% endfor %}
+
+    {% if is_paginated %}
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                {% endif %}
+
+                <span class="current">
+                    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">Próxima</a>
+                {% endif %}
+            </span>
+        </div>
+    {% endif %}
+    
+{% endblock content %}

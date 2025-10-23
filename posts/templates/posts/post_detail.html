@@ -1,0 +1,27 @@
+{% extends 'base.html' %} 
+
+{% block title %}{{ post.title }}{% endblock title %}
+
+{% block content %}
+    <article class="full-post">
+        <h1>{{ post.title }}</h1>
+        <p class="meta">
+            Publicado por **{{ post.author }}** em {{ post.created_at|date:"d M, Y" }}
+        </p>
+
+        <div class="post-content">
+            {{ post.content|safe }} 
+        </div>
+        
+        <hr>
+
+        <section class="comments-section">
+            <h3>Comentários (Ainda não implementado)</h3>
+            <p>Em breve, a funcionalidade de comentários estará aqui!</p>
+        </section>
+        
+    </article>
+    
+    <p><a href="{% url 'post_list' %}">← Voltar para a lista de posts</a></p>
+    
+{% endblock content %}
